@@ -76,7 +76,7 @@ function WalletButton() {
     return (
       <button
         onClick={openConnectModal}
-        className="px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00b8ff] to-[var(--neon-purple)] font-semibold text-white text-sm hover:shadow-lg hover:shadow-[#00b8ff]/25 transition-all"
+        className="px-4 sm:px-5 mr-2 sm:mr-0 py-1.5 sm:py-2.5 rounded-lg bg-gradient-to-r from-[#00b8ff] to-[var(--neon-purple)] font-semibold text-white text-sm hover:shadow-lg hover:shadow-[#00b8ff]/25 transition-all"
       >
         <span className="hidden sm:inline">Connect Wallet</span>
         <span className="sm:hidden">Connect</span>

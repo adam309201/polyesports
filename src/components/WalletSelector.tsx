@@ -171,15 +171,15 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-white">Connected</p>
-              <p className="text-xs text-slate-400">
+              <p className="text-sm font-medium text-slate-900">Connected</p>
+              <p className="text-xs text-slate-500">
                 {address.slice(0, 6)}...{address.slice(-4)}
               </p>
             </div>
           </div>
           <button
             onClick={() => disconnect()}
-            className="rounded-lg bg-slate-700 px-3 py-1.5 text-xs font-medium text-slate-300 transition-colors hover:bg-slate-600"
+            className="rounded-lg bg-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-300"
           >
             Disconnect
           </button>
@@ -195,21 +195,21 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
           key={connector.uid}
           onClick={() => handleConnect(connector)}
           disabled={isPending}
-          className="flex w-full items-center gap-3 rounded-xl border border-slate-700/50 bg-slate-800/50 p-3 transition-all hover:border-slate-600 hover:bg-slate-700/50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 transition-all hover:border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-slate-700/50">
+          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-slate-100">
             {getConnectorIcon(connector)}
           </div>
           <div className="flex-1 text-left">
-            <p className="text-sm font-medium text-white">{getConnectorName(connector)}</p>
-            <p className="text-xs text-slate-400">
+            <p className="text-sm font-medium text-slate-900">{getConnectorName(connector)}</p>
+            <p className="text-xs text-slate-500">
               {connector.id.toLowerCase().includes('walletconnect')
                 ? 'Scan QR code'
                 : 'Connect via browser'}
             </p>
           </div>
           {isPending && (
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-500 border-t-sky-400" />
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-sky-500" />
           )}
         </button>
       ))}

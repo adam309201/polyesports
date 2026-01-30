@@ -229,13 +229,13 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
 
       {/* Modal */}
       <div
-        className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900 shadow-2xl"
+        className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 transition-all hover:bg-zinc-700 hover:text-white"
+          className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-400 transition-all hover:bg-slate-200 hover:text-slate-900"
         >
           <svg
             width="16"
@@ -251,15 +251,15 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
 
         {/* Header */}
         <div className="px-6 pt-8 pb-4 text-center">
-          <h2 className="text-xl font-bold text-white">Setup Trading</h2>
-          <p className="mt-1 text-sm text-zinc-400">Complete the steps to start trading</p>
+          <h2 className="text-xl font-bold text-slate-900">Setup Trading</h2>
+          <p className="mt-1 text-sm text-slate-500">Complete the steps to start trading</p>
         </div>
 
         {/* Steps Progress */}
         <div className="px-8 pb-6">
           <div className="relative flex items-center justify-between">
             {/* Progress Line Background */}
-            <div className="absolute top-5 right-[20%] left-[20%] h-0.5 bg-zinc-700" />
+            <div className="absolute top-5 right-[20%] left-[20%] h-0.5 bg-slate-200" />
 
             {/* Progress Line Active */}
             <div
@@ -284,7 +284,7 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
                             ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30'
                             : state === 'current'
                               ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30'
-                              : 'bg-zinc-700 text-zinc-400'
+                              : 'bg-slate-200 text-slate-400'
                     }`}
                   >
                     {state === 'completed' ? (
@@ -318,12 +318,12 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
                   <span
                     className={`mt-2 text-xs font-medium transition-colors ${
                       state === 'completed'
-                        ? 'text-emerald-400'
+                        ? 'text-emerald-600'
                         : state === 'error'
-                          ? 'text-red-400'
+                          ? 'text-red-500'
                           : state === 'current' || state === 'loading'
-                            ? 'text-sky-400'
-                            : 'text-zinc-500'
+                            ? 'text-sky-500'
+                            : 'text-slate-400'
                     }`}
                   >
                     {step.label}
@@ -336,7 +336,7 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
 
         {/* Content */}
         <div className="px-6 pb-6">
-          <div className="rounded-2xl border border-zinc-700/30 bg-zinc-800/50 p-6">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
             {/* Step 1: Connect Wallet */}
             {currentStep === 'connect' && (
               <div className="space-y-4">
@@ -354,8 +354,8 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
                       <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 5v14a2 2 0 0 0 2 2h16v-5M18 12a2 2 0 0 0 0 4h4v-4Z" />
                     </svg>
                   </div>
-                  <h3 className="text-base font-semibold text-white">Connect Wallet</h3>
-                  <p className="mt-1 mb-4 text-sm text-zinc-400">Choose your wallet to continue</p>
+                  <h3 className="text-base font-semibold text-slate-900">Connect Wallet</h3>
+                  <p className="mt-1 mb-4 text-sm text-slate-500">Choose your wallet to continue</p>
                 </div>
                 <WalletSelector />
               </div>
@@ -416,7 +416,7 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
                   )}
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold text-white">
+                  <h3 className="text-base font-semibold text-slate-900">
                     {isWrongNetwork
                       ? 'Wrong Network'
                       : stepStatus === 'error'
@@ -430,7 +430,7 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
                               : 'Sign Message'}
                   </h3>
                   <p
-                    className={`mt-1 text-sm ${stepStatus === 'error' ? 'text-red-400' : isWrongNetwork ? 'text-orange-400' : 'text-zinc-400'}`}
+                    className={`mt-1 text-sm ${stepStatus === 'error' ? 'text-red-500' : isWrongNetwork ? 'text-orange-500' : 'text-slate-500'}`}
                   >
                     {isWrongNetwork
                       ? 'Please switch to Polygon network to continue'
@@ -482,8 +482,8 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold text-white">Ready to Trade!</h3>
-                  <p className="mt-1 text-sm text-zinc-400">
+                  <h3 className="text-base font-semibold text-slate-900">Ready to Trade!</h3>
+                  <p className="mt-1 text-sm text-slate-500">
                     Your account is set up. Happy trading!
                   </p>
                 </div>
@@ -494,7 +494,7 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
 
         {/* Footer */}
         <div className="px-6 pb-6">
-          <p className="text-center text-xs text-zinc-500">
+          <p className="text-center text-xs text-slate-400">
             {currentStep === 'connect' && 'Secure connection via Polygon network'}
             {currentStep === 'initialize' &&
               (isWrongNetwork

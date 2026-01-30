@@ -144,13 +144,13 @@ export default function ConnectWalletModal({ isOpen, onClose }: ConnectWalletMod
 
       {/* Modal */}
       <div className="animate-in zoom-in-95 fade-in relative w-full max-w-md duration-200">
-        <div className="overflow-hidden rounded-2xl border border-[#3d5266] bg-[#1a2736] shadow-2xl">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
           {/* Header */}
           <div className="relative px-6 pt-6 pb-4">
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#243447] text-slate-400 transition-all hover:bg-[#2d3f52] hover:text-white"
+              className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-400 transition-all hover:bg-slate-200 hover:text-slate-900"
             >
               <svg
                 width="16"
@@ -166,7 +166,7 @@ export default function ConnectWalletModal({ isOpen, onClose }: ConnectWalletMod
 
             {/* Icon */}
             <div className="mb-4 flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#243447]">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
                 <svg
                   width="32"
                   height="32"
@@ -174,15 +174,15 @@ export default function ConnectWalletModal({ isOpen, onClose }: ConnectWalletMod
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
-                  className="text-emerald-400"
+                  className="text-emerald-500"
                 >
                   <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 5v14a2 2 0 0 0 2 2h16v-5M18 12a2 2 0 0 0 0 4h4v-4Z" />
                 </svg>
               </div>
             </div>
 
-            <h2 className="text-center text-xl font-bold text-white">Connect Wallet</h2>
-            <p className="mt-1 text-center text-sm text-slate-400">
+            <h2 className="text-center text-xl font-bold text-slate-900">Connect Wallet</h2>
+            <p className="mt-1 text-center text-sm text-slate-500">
               Choose your preferred wallet to continue
             </p>
           </div>
@@ -196,26 +196,26 @@ export default function ConnectWalletModal({ isOpen, onClose }: ConnectWalletMod
                   key={connector.uid}
                   onClick={() => handleConnect(connector)}
                   disabled={isPending}
-                  className="group flex w-full items-center gap-4 rounded-xl border border-[#3d5266]/50 bg-[#243447]/50 p-4 transition-all duration-200 hover:border-[#3d5266] hover:bg-[#243447] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="group flex w-full items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 transition-all duration-200 hover:border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {/* Icon container */}
-                  <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-[#243447] transition-colors group-hover:bg-[#2d3f52]">
+                  <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-slate-100 transition-colors group-hover:bg-slate-200">
                     {getConnectorIcon(connector)}
                   </div>
 
                   {/* Text */}
                   <div className="flex-1 text-left">
-                    <p className="text-base font-semibold text-white transition-colors">
+                    <p className="text-base font-semibold text-slate-900 transition-colors">
                       {getConnectorName(connector)}
                     </p>
-                    <p className="text-sm text-slate-400 transition-colors group-hover:text-slate-300">
+                    <p className="text-sm text-slate-500 transition-colors group-hover:text-slate-600">
                       {isConnecting ? 'Connecting...' : getConnectorDescription(connector)}
                     </p>
                   </div>
 
                   {/* Arrow or loading */}
                   {isConnecting ? (
-                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#3d5266] border-t-emerald-400" />
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-500" />
                   ) : (
                     <svg
                       width="20"
@@ -224,7 +224,7 @@ export default function ConnectWalletModal({ isOpen, onClose }: ConnectWalletMod
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
-                      className="text-slate-500 transition-all group-hover:translate-x-1 group-hover:text-slate-300"
+                      className="text-slate-400 transition-all group-hover:translate-x-1 group-hover:text-slate-600"
                     >
                       <path d="m9 18 6-6-6-6" />
                     </svg>
@@ -235,8 +235,8 @@ export default function ConnectWalletModal({ isOpen, onClose }: ConnectWalletMod
           </div>
 
           {/* Footer */}
-          <div className="border-t border-[#3d5266] px-6 pt-2 pb-6">
-            <p className="text-center text-xs text-slate-500">
+          <div className="border-t border-slate-200 px-6 pt-2 pb-6">
+            <p className="text-center text-xs text-slate-400">
               By connecting, you agree to our Terms of Service
             </p>
           </div>
