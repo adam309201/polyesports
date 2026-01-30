@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useWallet } from '@/providers/WalletContext';
 import useUserApiCredentials from '@/hooks/useUserApiCredentials';
 import useTokenApprovals from '@/hooks/useTokenApprovals';
@@ -27,6 +27,7 @@ export default function useTradingSession() {
   const { checkAllTokenApprovals, setAllTokenApprovals } = useTokenApprovals();
   const { derivedSafeAddressFromEoa, isSafeDeployed, deploySafe } = useSafeDeployment();
   const { relayClient, initializeRelayClient, clearRelayClient } = useRelayClient();
+  const isInitializingRef = useRef(false);
 
   // Step 0: Check for existing session when wallet connects
   useEffect(() => {
@@ -57,10 +58,12 @@ export default function useTradingSession() {
 
   // Main function to orchestrate trading session initialization
   const initializeTradingSession = useCallback(async () => {
+    if (isInitializingRef.current) return;
     if (!eoaAddress) {
       throw new Error('Wallet not connected');
     }
 
+    isInitializingRef.current = true;
     setCurrentStep('checking');
     setSessionError(null);
 
@@ -128,6 +131,8 @@ export default function useTradingSession() {
       const error = err instanceof Error ? err : new Error('Unknown error');
       setSessionError(error);
       setCurrentStep('idle');
+    } finally {
+      isInitializingRef.current = false;
     }
   }, [
     eoaAddress,
