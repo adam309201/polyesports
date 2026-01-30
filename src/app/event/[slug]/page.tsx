@@ -47,6 +47,7 @@ export default function EventDetailPage() {
     setSelectedMarket(market);
     if (outcomeIndex !== undefined) {
       setSelectedOutcomeIndex(outcomeIndex);
+      setShowMobileTradeBox(true);
     }
   };
 
@@ -216,7 +217,7 @@ export default function EventDetailPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 lg:pb-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Breadcrumb */}
       <nav className="mb-6">
         <ol className="flex items-center gap-2 text-sm">
@@ -374,31 +375,6 @@ export default function EventDetailPage() {
           </div>
         </div>
       </div>
-
-      {/* Mobile Price Buttons - Fixed Bottom Bar */}
-      {!loading && event && (
-        <div
-          className="fixed bottom-0 left-0 right-0 z-40 lg:hidden border-t border-[var(--border-default)] bg-[var(--bg-card)]"
-          style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
-        >
-          <div className="flex gap-2 px-4 py-3">
-            <button
-              onClick={() => { setSelectedOutcomeIndex(0); setShowMobileTradeBox(true); }}
-              className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl text-sm font-bold bg-[#00b8ff]/10 text-[#00b8ff] active:bg-[#00b8ff]/20 transition-colors"
-            >
-              <span className="truncate">{team1}</span>
-              <span className="whitespace-nowrap">{(team1Price * 100).toFixed(1)}¢</span>
-            </button>
-            <button
-              onClick={() => { setSelectedOutcomeIndex(1); setShowMobileTradeBox(true); }}
-              className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl text-sm font-bold bg-[#5c6c8a]/10 text-[#5c6c8a] active:bg-[#5c6c8a]/20 transition-colors"
-            >
-              <span className="truncate">{team2}</span>
-              <span className="whitespace-nowrap">{(team2Price * 100).toFixed(1)}¢</span>
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Mobile Trade Bottom Sheet */}
       <div

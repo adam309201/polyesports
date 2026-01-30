@@ -171,6 +171,7 @@ export default function GameMatchesPage() {
   const [selectedEvent, setSelectedEvent] = useState<PolymarketEvent | null>(null);
   const [selectedOutcomeIndex, setSelectedOutcomeIndex] = useState<0 | 1>(0);
   const [activeTab, setActiveTab] = useState<TabType>('active');
+  const [showMobileTradeBox, setShowMobileTradeBox] = useState(false);
 
   // Fetch game info
   useEffect(() => {
@@ -264,6 +265,16 @@ export default function GameMatchesPage() {
     fetchFinished();
   }, [slug]);
 
+  // Lock body scroll when mobile trade sheet is open
+  useEffect(() => {
+    if (showMobileTradeBox) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [showMobileTradeBox]);
+
   const gameName = game?.name || slug.toUpperCase();
   const events = activeTab === 'active' ? activeEvents : finishedEvents;
   const isLoading = activeTab === 'active' ? loading : loadingFinished;
@@ -272,8 +283,8 @@ export default function GameMatchesPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">{gameName} Matches</h1>
-        <p className="text-[var(--text-secondary)]">
+        <h1 className="text-xl sm:text-3xl font-bold text-[var(--text-primary)] mb-1 sm:mb-2">{gameName} Matches</h1>
+        <p className="text-xs sm:text-sm text-[var(--text-secondary)]">
           {activeEvents.length} active{finishedEvents.length > 0 ? ` · ${finishedEvents.length} finished` : ''} prediction markets
         </p>
       </div>
@@ -360,12 +371,14 @@ export default function GameMatchesPage() {
               onSelectEvent={(event, outcomeIndex) => {
                 setSelectedEvent(event);
                 setSelectedOutcomeIndex(outcomeIndex);
+                setShowMobileTradeBox(true);
               }}
               isFinished={activeTab === 'finished'}
             />
           </div>
 
-          <div className="lg:col-span-1">
+          {/* Right Column - Trade Box (desktop only) */}
+          <div className="hidden lg:block lg:col-span-1">
             <div className="sticky top-24">
               <TradeBox
                 event={selectedEvent}
@@ -410,6 +423,39 @@ export default function GameMatchesPage() {
           )}
         </div>
       )}
+
+      {/* Mobile Trade Bottom Sheet */}
+      <div
+        className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-300 ${
+          showMobileTradeBox ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          onClick={() => setShowMobileTradeBox(false)}
+        />
+        <div
+          className={`absolute bottom-0 left-0 right-0 bg-[var(--bg-card)] rounded-t-2xl transition-transform duration-300 ease-out ${
+            showMobileTradeBox ? 'translate-y-0' : 'translate-y-full'
+          }`}
+          style={{ maxHeight: '85vh', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        >
+          {/* Drag Handle */}
+          <div
+            className="flex justify-center pt-3 pb-1 cursor-pointer"
+            onClick={() => setShowMobileTradeBox(false)}
+          >
+            <div className="w-10 h-1 rounded-full bg-[var(--text-muted)]/30" />
+          </div>
+          <div className="overflow-y-auto" style={{ maxHeight: 'calc(85vh - 24px)' }}>
+            <TradeBox
+              event={selectedEvent}
+              selectedTeam={selectedOutcomeIndex}
+              onTeamChange={(team) => setSelectedOutcomeIndex(team)}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

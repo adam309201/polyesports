@@ -3,6 +3,7 @@
 import {useState, useEffect, useMemo} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import {useSearchParams} from 'next/navigation';
 import {useTeamLogos} from '@/hooks/useTeamLogos';
 
 // --- Types ---
@@ -142,10 +143,11 @@ type StatusFilter = 'all' | 'live' | 'upcoming';
 type SortOption = 'default' | 'volume_desc' | 'volume_asc' | 'newest';
 
 export default function MatchesPage() {
+  const searchParams = useSearchParams();
   const [events, setEvents] = useState<PolymarketEvent[]>([]);
   const [games, setGames] = useState<EsportsGame[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeGame, setActiveGame] = useState('all');
+  const [activeGame, setActiveGame] = useState(searchParams.get('game') || 'all');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('upcoming');
   const [sortBy, setSortBy] = useState<SortOption>('default');
   const [searchQuery, setSearchQuery] = useState('');

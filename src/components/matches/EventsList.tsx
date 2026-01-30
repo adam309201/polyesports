@@ -263,23 +263,23 @@ export default function EventsList({ events, selectedEvent, onSelectEvent, selec
               <div className="px-4 pb-4 flex gap-2">
                 <button
                   onClick={() => onSelectEvent(event, 0)}
-                  className={`flex-1 py-3 rounded-lg text-sm font-semibold transition-all ${
+                  className={`flex-1 flex justify-center gap-1 py-3 rounded-lg text-sm font-semibold transition-all ${
                     isSelected && selectedOutcomeIndex === 0
                       ? 'bg-[#00b8ff] text-white'
                       : 'bg-[#00b8ff]/10 text-[#00b8ff] hover:bg-[#00b8ff]/20'
                   }`}
                 >
-                  {team1} {team1Percent}¢
+                  <span className={'truncate max-w-16'}>{team1}</span> {team1Percent}¢
                 </button>
                 <button
                   onClick={() => onSelectEvent(event, 1)}
-                  className={`flex-1 py-3 rounded-lg text-sm font-semibold transition-all ${
+                  className={`flex-1 flex justify-center gap-1 items-center py-3 rounded-lg text-sm font-semibold transition-all ${
                     isSelected && selectedOutcomeIndex === 1
                       ? 'bg-[#5c6c8a] text-white'
                       : 'bg-[#5c6c8a]/10 text-[#5c6c8a] hover:bg-[#5c6c8a]/20'
                   }`}
                 >
-                  {team2} {team2Percent}¢
+                  <span className={'truncate max-w-16'}>{team2}</span> {team2Percent}¢
                 </button>
                 <Link
                   href={`/event/${event.slug}`}

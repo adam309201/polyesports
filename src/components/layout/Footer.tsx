@@ -6,10 +6,10 @@ import logoImage from '@/common/assets/images/logo.png';
 
 const FOOTER_LINKS = {
   markets: [
-    { name: 'CS:GO', href: '/matches/csgo' },
-    { name: 'Dota 2', href: '/matches/dota2' },
-    { name: 'League of Legends', href: '/matches/lol' },
-    { name: 'Valorant', href: '/matches/valorant' },
+    { name: 'CS:GO', href: '/matches?game=csgo' },
+    { name: 'Dota 2', href: '/matches?game=dota2' },
+    { name: 'League of Legends', href: '/matches?game=lol' },
+    { name: 'Valorant', href: '/matches?game=valorant' },
   ],
   company: [
     { name: 'About', href: '/about' },
