@@ -76,6 +76,7 @@ export default function AuthFlowManager() {
   const authCompletedRef = useRef(false);
   const hasAttemptedRestoreRef = useRef(false);
   const sessionMatchesWalletRef = useRef(false);
+  const wasConnectedRef = useRef(false);
 
   // Wait for connection to be stable (not connecting or reconnecting)
   const isConnectionStable = !isConnecting && !isReconnecting;
@@ -290,6 +291,42 @@ export default function AuthFlowManager() {
     isInitialized,
     tradingSession,
   ]);
+
+  // Safety net: detect connection transition and ensure auth modal shows
+  // This catches mobile WalletConnect flows where STEP 1 may miss due to isConnectionStable timing
+  useEffect(() => {
+    if (!sdkHasLoaded) return;
+
+    const wasConnected = wasConnectedRef.current;
+
+    if (isConnected && address) {
+      wasConnectedRef.current = true;
+
+      // Fresh connection: was not connected, now connected
+      if (!wasConnected) {
+        if (isInitialized) {
+          authCompletedRef.current = true;
+          return;
+        }
+        if (userDismissedRef.current || authCompletedRef.current) return;
+        if (showAuthModal) return;
+
+        // Wait briefly for session restore, then show modal if still needed
+        const timer = setTimeout(() => {
+          if (
+            !authCompletedRef.current &&
+            !userDismissedRef.current
+          ) {
+            console.log('[AuthFlowManager] Safety: fresh connect detected, showing auth modal');
+            setShowAuthModal(true);
+          }
+        }, 1500);
+        return () => clearTimeout(timer);
+      }
+    } else {
+      wasConnectedRef.current = false;
+    }
+  }, [sdkHasLoaded, isConnected, address, isInitialized, showAuthModal]);
 
   // Handle when initialization completes (close modal)
   useEffect(() => {
