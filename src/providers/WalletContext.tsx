@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useMemo, ReactNode, useCallback, useState } from 'react';
+import { createContext, useContext, useMemo, useEffect, ReactNode, useCallback, useState } from 'react';
 import { useAccount, usePublicClient, useWalletClient, useConnect, useDisconnect } from 'wagmi';
 import { PublicClient, WalletClient } from 'viem';
 import { providers, Signer } from 'ethers';
@@ -31,35 +31,61 @@ interface WalletProviderProps {
 }
 
 export default function WalletProvider({ children }: WalletProviderProps) {
-  const { address, isConnected, isConnecting } = useAccount();
+  const { address, isConnected, isConnecting, connector } = useAccount();
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   const { connectAsync, connectors } = useConnect();
   const { disconnectAsync } = useDisconnect();
   const [isConnectingState, setIsConnectingState] = useState(false);
 
+  // Get EIP-1193 provider directly from the active connector.
+  // This is critical for WalletConnect on mobile — walletClient.transport
+  // is an HTTP fallback that can't deep-link to the wallet app for signing.
+  // connector.getProvider() returns the real WalletConnect provider.
+  const [eip1193Provider, setEip1193Provider] = useState<any>(null);
+
+  useEffect(() => {
+    if (!connector || !isConnected) {
+      setEip1193Provider(null);
+      return;
+    }
+    let cancelled = false;
+    connector.getProvider().then((provider) => {
+      if (!cancelled) setEip1193Provider(provider);
+    }).catch(() => {
+      if (!cancelled) setEip1193Provider(null);
+    });
+    return () => { cancelled = true; };
+  }, [connector, isConnected]);
+
   const ethersSigner = useMemo(() => {
-    if (!walletClient) return null;
+    if (!walletClient || !address) return null;
+    const { chain } = walletClient;
+    const network = {
+      chainId: chain.id,
+      name: chain.name,
+      ensAddress: chain.contracts?.ensRegistry?.address,
+    };
     try {
-      const { account, chain, transport } = walletClient;
-      const network = {
-        chainId: chain.id,
-        name: chain.name,
-        ensAddress: chain.contracts?.ensRegistry?.address,
-      };
-      // Use transport first (works with WalletConnect), fallback to walletClient
+      // Prefer the connector's EIP-1193 provider (works with WalletConnect deep-link)
+      if (eip1193Provider) {
+        const provider = new providers.Web3Provider(eip1193Provider, network);
+        return provider.getSigner(address) as any;
+      }
+      // Fallback: viem transport then walletClient
+      const { transport } = walletClient;
       let provider: providers.Web3Provider;
       try {
         provider = new providers.Web3Provider(transport, network);
       } catch {
         provider = new providers.Web3Provider(walletClient as any, network);
       }
-      return provider.getSigner(account.address) as any;
+      return provider.getSigner(address) as any;
     } catch (err) {
-      console.error('[WalletProvider] Failed to convert wallet client to signer:', err);
+      console.error('[WalletProvider] Failed to create ethers signer:', err);
       return null;
     }
-  }, [walletClient]);
+  }, [walletClient, address, eip1193Provider]);
 
   const connect = useCallback(async () => {
     try {
