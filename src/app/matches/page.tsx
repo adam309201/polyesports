@@ -1,6 +1,6 @@
 'use client';
 
-import {useState, useEffect, useMemo} from 'react';
+import {useState, useEffect, useMemo, Suspense} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {useSearchParams} from 'next/navigation';
@@ -143,6 +143,14 @@ type StatusFilter = 'all' | 'live' | 'upcoming';
 type SortOption = 'default' | 'volume_desc' | 'volume_asc' | 'newest';
 
 export default function MatchesPage() {
+  return (
+    <Suspense>
+      <MatchesContent />
+    </Suspense>
+  );
+}
+
+function MatchesContent() {
   const searchParams = useSearchParams();
   const [events, setEvents] = useState<PolymarketEvent[]>([]);
   const [games, setGames] = useState<EsportsGame[]>([]);
