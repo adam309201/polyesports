@@ -47,7 +47,13 @@ export default function WalletProvider({ children }: WalletProviderProps) {
         name: chain.name,
         ensAddress: chain.contracts?.ensRegistry?.address,
       };
-      const provider = new providers.Web3Provider(transport, network);
+      // Use transport first (works with WalletConnect), fallback to walletClient
+      let provider: providers.Web3Provider;
+      try {
+        provider = new providers.Web3Provider(transport, network);
+      } catch {
+        provider = new providers.Web3Provider(walletClient as any, network);
+      }
       return provider.getSigner(account.address) as any;
     } catch (err) {
       console.error('[WalletProvider] Failed to convert wallet client to signer:', err);
