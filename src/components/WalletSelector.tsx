@@ -3,7 +3,7 @@
 import { useCallback } from 'react';
 import { useConnect, useAccount, useDisconnect } from 'wagmi';
 import { Connector } from 'wagmi';
-import { shouldUseWalletConnect } from '@/utils';
+import { isMobile } from '@/utils';
 
 // Wallet icons as SVG
 const WalletIcons = {
@@ -124,9 +124,9 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
 
   const handleConnect = useCallback(
     (connector: Connector) => {
-      // On mobile (normal browser), use WalletConnect so it deeplinks
-      // to the wallet app for approval then returns to this browser.
-      if (shouldUseWalletConnect(connector.id)) {
+      const id = connector.id.toLowerCase();
+      // Mobile: use WalletConnect to deeplink to wallet app then return to browser
+      if (isMobile() && !id.includes('walletconnect')) {
         const wcConnector = connectors.find(c => c.id.toLowerCase().includes('walletconnect'));
         if (wcConnector) {
           connect(
@@ -136,6 +136,7 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
           return;
         }
       }
+      // Desktop: connect directly via native connector (extension)
       connect(
         { connector },
         {

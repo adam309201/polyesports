@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { useConnect, useAccount } from 'wagmi';
 import { Connector } from 'wagmi';
 import { MetamaskIcon } from '@/components/icons';
-import { shouldUseWalletConnect } from '@/utils';
+import { isMobile } from '@/utils';
 
 // Wallet icons
 const WalletIcons = {
@@ -112,9 +112,9 @@ export default function ConnectWalletModal({ isOpen, onClose }: ConnectWalletMod
 
   const handleConnect = useCallback(
     (connector: Connector) => {
-      // On mobile (normal browser), use WalletConnect so it deeplinks
-      // to the wallet app for approval then returns to this browser.
-      if (shouldUseWalletConnect(connector.id)) {
+      const id = connector.id.toLowerCase();
+      // Mobile: use WalletConnect to deeplink to wallet app then return to browser
+      if (isMobile() && !id.includes('walletconnect')) {
         const wcConnector = connectors.find(c => c.id.toLowerCase().includes('walletconnect'));
         if (wcConnector) {
           setConnectingId(connector.uid);
@@ -122,6 +122,7 @@ export default function ConnectWalletModal({ isOpen, onClose }: ConnectWalletMod
           return;
         }
       }
+      // Desktop: connect directly via native connector (extension)
       setConnectingId(connector.uid);
       connect({ connector });
     },

@@ -1,31 +1,10 @@
-// --- Mobile wallet helpers ---
+// --- Mobile detection ---
 
 export function isMobile(): boolean {
   if (typeof window === 'undefined') return false;
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
-}
-
-export function isWalletInjected(): boolean {
-  if (typeof window === 'undefined') return false;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const eth = (window as any).ethereum;
-  return !!eth?.isMetaMask || !!eth?.isCoinbaseWallet || !!eth?.isCoinbaseBrowser;
-}
-
-/**
- * On mobile without an injected wallet (normal browser, not wallet in-app browser),
- * we should use WalletConnect instead of the native connector.
- * WalletConnect will deeplink to the wallet app for approval,
- * then return to this browser with the connection established.
- */
-export function shouldUseWalletConnect(connectorId: string): boolean {
-  if (!isMobile()) return false;
-  if (isWalletInjected()) return false;
-
-  const id = connectorId.toLowerCase();
-  return id.includes('metamask') || id.includes('coinbase') || id === 'injected';
 }
 
 // --- Number formatting ---
