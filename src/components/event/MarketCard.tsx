@@ -67,7 +67,7 @@ export default function MarketCard({
                     : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'
                 }`}
               >
-                <span className="opacity-70 truncate">{outcome}</span>
+                <span className="opacity-70 max-w-20 truncate">{outcome}</span>
                 <span className="ml-1 text-sm flex-shrink-0">{price}¢</span>
               </button>
             );
