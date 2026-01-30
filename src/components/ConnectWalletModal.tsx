@@ -80,6 +80,17 @@ export default function ConnectWalletModal({ isOpen, onClose }: ConnectWalletMod
     setMounted(true);
   }, []);
 
+  // Mobile: auto-trigger WalletConnect when modal opens
+  useEffect(() => {
+    if (!isOpen || !mounted || isConnected) return;
+    if (!isMobile()) return;
+    const wcConnector = connectors.find(c => c.id.toLowerCase().includes('walletconnect'));
+    if (wcConnector && !isPending) {
+      setConnectingId(wcConnector.uid);
+      connect({ connector: wcConnector });
+    }
+  }, [isOpen, mounted, isConnected, connectors, isPending, connect]);
+
   // Close modal when connected
   useEffect(() => {
     if (isConnected && isOpen) {
