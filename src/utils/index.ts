@@ -1,4 +1,4 @@
-// --- Mobile wallet deeplink helpers ---
+// --- Mobile wallet helpers ---
 
 export function isMobile(): boolean {
   if (typeof window === 'undefined') return false;
@@ -7,51 +7,25 @@ export function isMobile(): boolean {
   );
 }
 
-export function isMetaMaskInjected(): boolean {
-  if (typeof window === 'undefined') return false;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return !!(window as any).ethereum?.isMetaMask;
-}
-
-export function isCoinbaseInjected(): boolean {
+export function isWalletInjected(): boolean {
   if (typeof window === 'undefined') return false;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const eth = (window as any).ethereum;
-  return !!eth?.isCoinbaseWallet || !!eth?.isCoinbaseBrowser;
-}
-
-/** Returns MetaMask deeplink that opens the dApp inside the MetaMask in-app browser */
-export function getMetaMaskDeepLink(): string {
-  const url = window.location.href.replace(/^https?:\/\//, '');
-  return `https://metamask.app.link/dapp/${url}`;
-}
-
-/** Returns Coinbase Wallet deeplink */
-export function getCoinbaseDeepLink(): string {
-  return `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(window.location.href)}`;
+  return !!eth?.isMetaMask || !!eth?.isCoinbaseWallet || !!eth?.isCoinbaseBrowser;
 }
 
 /**
- * On mobile, if the wallet app is not already injected (user is in a normal browser),
- * redirect to the wallet's deeplink so the dApp opens inside the wallet's in-app browser.
- * Returns true if a redirect was triggered (caller should skip wagmi connect).
+ * On mobile without an injected wallet (normal browser, not wallet in-app browser),
+ * we should use WalletConnect instead of the native connector.
+ * WalletConnect will deeplink to the wallet app for approval,
+ * then return to this browser with the connection established.
  */
-export function handleMobileWalletRedirect(connectorId: string): boolean {
+export function shouldUseWalletConnect(connectorId: string): boolean {
   if (!isMobile()) return false;
+  if (isWalletInjected()) return false;
 
   const id = connectorId.toLowerCase();
-
-  if (id.includes('metamask') && !isMetaMaskInjected()) {
-    window.location.href = getMetaMaskDeepLink();
-    return true;
-  }
-
-  if (id.includes('coinbase') && !isCoinbaseInjected()) {
-    window.location.href = getCoinbaseDeepLink();
-    return true;
-  }
-
-  return false;
+  return id.includes('metamask') || id.includes('coinbase') || id === 'injected';
 }
 
 // --- Number formatting ---
