@@ -149,7 +149,6 @@ export default function TradeBox({ event, selectedTeam: externalSelectedTeam, on
   const { openConnectModal } = useConnectWalletModal();
   const {
     isTradingSessionComplete,
-    initializeTradingSession,
     getBalances,
     getPositionBalance,
     submitOrder,
@@ -189,13 +188,6 @@ export default function TradeBox({ event, selectedTeam: externalSelectedTeam, on
   // Fetch team logos
   const teamNames = useMemo(() => [team1, team2].filter(Boolean), [team1, team2]);
   const { logos: teamLogos } = useTeamLogos(teamNames);
-
-  // Initialize trading session when logged in
-  useEffect(() => {
-    if (isConnected && !isTradingSessionComplete) {
-      initializeTradingSession();
-    }
-  }, [isConnected, isTradingSessionComplete, initializeTradingSession]);
 
   // Fetch trading balance
   const { data: tradingBalance = 0, refetch: refetchBalance } = useQuery({

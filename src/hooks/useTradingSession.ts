@@ -56,10 +56,16 @@ export default function useTradingSession() {
   }, [tradingSession, relayClient, eoaAddress, walletClient, initializeRelayClient]);
 
   // Main function to orchestrate trading session initialization
+  const [isInitializing, setIsInitializing] = useState(false);
+
   const initializeTradingSession = useCallback(async () => {
     if (!eoaAddress) {
       throw new Error('Wallet not connected');
     }
+
+    // Guard against concurrent calls (e.g. AuthModal + other effects)
+    if (isInitializing) return;
+    setIsInitializing(true);
 
     setCurrentStep('checking');
     setSessionError(null);
@@ -128,8 +134,11 @@ export default function useTradingSession() {
       const error = err instanceof Error ? err : new Error('Unknown error');
       setSessionError(error);
       setCurrentStep('idle');
+    } finally {
+      setIsInitializing(false);
     }
   }, [
+    isInitializing,
     eoaAddress,
     derivedSafeAddressFromEoa,
     initializeRelayClient,
