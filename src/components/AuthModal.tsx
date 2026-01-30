@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAccount, useWalletClient, useSwitchChain } from 'wagmi';
 import { polygon } from 'viem/chains';
 import { useTrading } from '@/providers/TradingProvider';
-import WalletSelector from './WalletSelector';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type AuthStep = 'connect' | 'initialize' | 'complete';
 type StepStatus = 'pending' | 'loading' | 'success' | 'error';
@@ -25,6 +25,8 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
   const { isConnected, address, chainId } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { switchChain } = useSwitchChain();
+
+  const { openConnectModal } = useConnectModal();
 
   const {
     isTradingSessionComplete,
@@ -339,25 +341,28 @@ export default function AuthModal({ isOpen, onClose, onComplete }: AuthModalProp
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
             {/* Step 1: Connect Wallet */}
             {currentStep === 'connect' && (
-              <div className="space-y-4">
-                <div className="text-center">
-                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500/20 to-indigo-500/20">
-                    <svg
-                      width="28"
-                      height="28"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      className="text-sky-400"
-                    >
-                      <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 5v14a2 2 0 0 0 2 2h16v-5M18 12a2 2 0 0 0 0 4h4v-4Z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-base font-semibold text-slate-900">Connect Wallet</h3>
-                  <p className="mt-1 mb-4 text-sm text-slate-500">Choose your wallet to continue</p>
+              <div className="space-y-4 text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500/20 to-indigo-500/20">
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    className="text-sky-400"
+                  >
+                    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 5v14a2 2 0 0 0 2 2h16v-5M18 12a2 2 0 0 0 0 4h4v-4Z" />
+                  </svg>
                 </div>
-                <WalletSelector />
+                <h3 className="text-base font-semibold text-slate-900">Connect Wallet</h3>
+                <p className="mt-1 text-sm text-slate-500">Choose your wallet to continue</p>
+                <button
+                  onClick={openConnectModal}
+                  className="mt-3 w-full rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-500/25 transition-all hover:from-sky-600 hover:to-indigo-600"
+                >
+                  Connect Wallet
+                </button>
               </div>
             )}
 

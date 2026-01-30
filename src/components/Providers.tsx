@@ -1,11 +1,11 @@
 'use client';
 
 import { ReactNode, useMemo } from 'react';
-import { createConfig, WagmiProvider } from 'wagmi';
+import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { http } from 'viem';
 import { polygon } from 'viem/chains';
-import { metaMask, walletConnect, coinbaseWallet, injected } from 'wagmi/connectors';
+import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/styles.css';
 import WalletProvider from '@/providers/WalletContext';
 import TradingProvider from '@/providers/TradingProvider';
 import { PolymarketProvider } from '@/contexts/PolymarketContext';
@@ -14,41 +14,11 @@ import AuthFlowManager from './AuthFlowManager';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { basicTheme } from '@/theme';
 
-// WalletConnect Project ID
-const WALLETCONNECT_PROJECT_ID = '44dbb693da67b69818f9aa8a80ad8bd3';
-
-// Create wagmi config with connectors
-const config = createConfig({
+const config = getDefaultConfig({
+  appName: 'Polyme',
+  projectId: '44dbb693da67b69818f9aa8a80ad8bd3',
   chains: [polygon],
-  connectors: [
-    metaMask({
-      dappMetadata: {
-        name: 'Polyme',
-        url: 'https://polyme.market',
-        iconUrl: 'https://www.polyme.market/favicon_64_64.png',
-      },
-    }),
-    walletConnect({
-      projectId: WALLETCONNECT_PROJECT_ID,
-      metadata: {
-        name: 'Polyme',
-        description: 'Polymarket Trading Interface',
-        url: 'https://polyme.market',
-        icons: ['https://www.polyme.market/favicon_64_64.png'],
-      },
-      showQrModal: true,
-    }),
-    coinbaseWallet({
-      appName: 'Polyme',
-      appLogoUrl: 'https://www.polyme.market/favicon_64_64.png',
-    }),
-    injected({
-      shimDisconnect: true,
-    }),
-  ],
-  transports: {
-    [polygon.id]: http(),
-  },
+  ssr: true,
 });
 
 const queryClient = new QueryClient();
@@ -65,18 +35,20 @@ export default function Providers({ children }: ProvidersProps) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <WalletProvider>
-            <TradingProvider>
-              <PolymarketProvider>
-                <ConnectWalletModalProvider>
-                  <AuthFlowManager />
-                  {children}
-                </ConnectWalletModalProvider>
-              </PolymarketProvider>
-            </TradingProvider>
-          </WalletProvider>
-        </ThemeProvider>
+        <RainbowKitProvider locale={'en'} modalSize={'compact'}>
+          <ThemeProvider theme={theme}>
+            <WalletProvider>
+              <TradingProvider>
+                <PolymarketProvider>
+                  <ConnectWalletModalProvider>
+                    <AuthFlowManager />
+                    {children}
+                  </ConnectWalletModalProvider>
+                </PolymarketProvider>
+              </TradingProvider>
+            </WalletProvider>
+          </ThemeProvider>
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
