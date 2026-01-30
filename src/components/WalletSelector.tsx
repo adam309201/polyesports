@@ -3,6 +3,7 @@
 import { useCallback } from 'react';
 import { useConnect, useAccount, useDisconnect } from 'wagmi';
 import { Connector } from 'wagmi';
+import { handleMobileWalletRedirect } from '@/utils';
 
 // Wallet icons as SVG
 const WalletIcons = {
@@ -123,6 +124,8 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
 
   const handleConnect = useCallback(
     (connector: Connector) => {
+      // On mobile, deeplink to wallet app if not already inside it
+      if (handleMobileWalletRedirect(connector.id)) return;
       connect(
         { connector },
         {
