@@ -41,8 +41,14 @@ export default function WalletProvider({ children }: WalletProviderProps) {
   const ethersSigner = useMemo(() => {
     if (!walletClient) return null;
     try {
-      const provider = new providers.Web3Provider(walletClient as any);
-      return provider.getSigner() as any;
+      const { account, chain, transport } = walletClient;
+      const network = {
+        chainId: chain.id,
+        name: chain.name,
+        ensAddress: chain.contracts?.ensRegistry?.address,
+      };
+      const provider = new providers.Web3Provider(transport, network);
+      return provider.getSigner(account.address) as any;
     } catch (err) {
       console.error('[WalletProvider] Failed to convert wallet client to signer:', err);
       return null;
